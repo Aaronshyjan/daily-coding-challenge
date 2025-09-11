@@ -3,9 +3,6 @@ let currentUser = null;
 let currentPage = 'loginPage';
 let challenges = [];
 let userProgress = {};
-
-// API base URL (change if backend deployed)
-
 const API_URL = "https://myapp-backend.onrender.com";
 
 // Initialize application when DOM is loaded
