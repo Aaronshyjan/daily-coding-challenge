@@ -6,6 +6,7 @@ let userProgress = {};
 
 // API base URL (change if backend deployed)
 const API_URL = "http://localhost:5000";
+const API_URL = "https://myapp-backend.onrender.com";
 
 // Initialize application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
