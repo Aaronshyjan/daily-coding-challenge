@@ -3,7 +3,7 @@ let currentUser = null;
 let currentPage = 'loginPage';
 let challenges = [];
 let userProgress = {};
-const API_URL = "https://daily-coding-challenge-backend.onrender.com";
+const API_URL = "https://daily-coding-challenge.onrender.com";
 
 
 // Initialize application when DOM is loaded
