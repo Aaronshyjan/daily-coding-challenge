@@ -167,6 +167,22 @@ function logout() {
     localStorage.removeItem('currentUser');
     showLogin();
 }
+function showOverallScore() {
+    console.log('Showing progress page');
+    
+    if (!currentUser) {
+        console.log('No authenticated user, redirecting to login');
+        showLogin();
+        return;
+    }
+    
+    if (showPage('overallScorePage')) {
+        setTimeout(() => {
+            loadScoreCharts();
+            loadRecentActivity();
+        }, 100);
+    }
+}
 
 // Navigation
 function showPage(pageId) {
