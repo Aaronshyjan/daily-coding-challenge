@@ -3,19 +3,21 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 const app = express();
-app.use(cors());
+
+// Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ["https://daily-coding-challenge.vercel.app/"], // replace with your real Vercel URL
+  origin: ["https://daily-coding-challenge.vercel.app"], // ✅ removed trailing slash
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
 // MongoDB connection
-mongoose.connect("mongodb+srv://aaron21:Test12345@coding.jstvqhm.mongodb.net/?retryWrites=true&w=majority&appName=coding", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://aaron21:Test12345@coding.jstvqhm.mongodb.net/coding?retryWrites=true&w=majority",
+)
+.then(() => console.log("✅ MongoDB connected"))
+.catch(err => console.error("❌ MongoDB connection error:", err));
 
 // Schemas
 const UserSchema = new mongoose.Schema({
@@ -42,24 +44,41 @@ const Challenge = mongoose.model("Challenge", ChallengeSchema);
 
 // Routes
 app.post("/signup", async (req, res) => {
-  const { name, email, password, role } = req.body;
-  const exists = await User.findOne({ email });
-  if (exists) return res.json({ success: false, message: "Email already exists" });
-  const user = new User({ name, email, password, role });
-  await user.save();
-  res.json({ success: true, user });
+  try {
+    const { name, email, password, role } = req.body;
+    const exists = await User.findOne({ email });
+    if (exists) return res.json({ success: false, message: "Email already exists" });
+    const user = new User({ name, email, password, role });
+    await user.save();
+    res.json({ success: true, user });
+  } catch (err) {
+    console.error("Signup error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 });
 
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email, password });
-  if (!user) return res.json({ success: false, message: "Invalid credentials" });
-  res.json({ success: true, user });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email, password });
+    if (!user) return res.json({ success: false, message: "Invalid credentials" });
+    res.json({ success: true, user });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 });
 
 app.get("/challenges", async (req, res) => {
-  const challenges = await Challenge.find();
-  res.json(challenges);
+  try {
+    const challenges = await Challenge.find();
+    res.json(challenges);
+  } catch (err) {
+    console.error("Fetch challenges error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 });
 
-app.listen(5000, () => console.log("✅ Backend running on http://localhost:5000"));
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`✅ Backend running on port ${PORT}`));
