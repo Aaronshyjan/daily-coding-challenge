@@ -5,6 +5,11 @@ import cors from "cors";
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cors({
+  origin: ["https://daily-coding-challenge.vercel.app/"], // replace with your real Vercel URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 // MongoDB connection
 mongoose.connect("mongodb+srv://aaron21:Test12345@coding.jstvqhm.mongodb.net/?retryWrites=true&w=majority&appName=coding", {
